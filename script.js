@@ -57,7 +57,7 @@ function box(w,h,d,y,c){const g=document.createElement("div");g.style.cssText=`p
 [[190,26,0],[160,26,-26],[130,26,-52],[100,26,-78],[70,26,-104]].forEach(([w,h,y],i)=>box(w,h,w,y+60,"#5a6470"));box(36,36,36,-135+60,"#8a7a5a");box(10,30,10,-170+60,"#F2C14E");
 function ap(){O.style.transform=`rotateX(${rx}deg) rotateY(${ry}deg) scale(${z})`}ap();
 const st=$("#stage");let pd=null;st.onpointerdown=e=>{pd=[e.clientX,e.clientY];st.setPointerCapture(e.pointerId)};st.onpointermove=e=>{if(!pd)return;ry+=(e.clientX-pd[0])*.6;rx=Math.max(-70,Math.min(30,rx-(e.clientY-pd[1])*.4));pd=[e.clientX,e.clientY];ap()};st.onpointerup=()=>pd=null;
-st.addEventListener("wheel",e=>{e.preventDefault();z=Math.max(.5,Math.min(2,z-e.deltaY*.001));ap()},{passive:false});
+st.onpointercancel=()=>pd=null;st.addEventListener("wheel",e=>{if(!e.ctrlKey)return;e.preventDefault();z=Math.max(.5,Math.min(2,z-e.deltaY*.003));ap()},{passive:false});
 $("#zi").onclick=()=>{z=Math.min(2,z+.15);ap()};$("#zo").onclick=()=>{z=Math.max(.5,z-.15);ap()};$("#rs").onclick=()=>{ry=-30;rx=-18;z=1;ap()};
 // Kuis
 const Q=[["Kerajaan Hindu tertua di Indonesia adalah…",["Kutai Martadipura","Tarumanagara","Kalingga","Majapahit"],0,"Kutai tercatat sebagai kerajaan Hindu tertua di Indonesia."],
@@ -93,3 +93,104 @@ s.style.cssText=`left:${lf}%;font-size:${22+Math.random()*22}px;--o:${edge?.55:.
 const p=e.parentElement;e.style.setProperty("--d",([...p.children].indexOf(e)%6)*.09+"s");e.classList.add("rv")});
 if(!("IntersectionObserver"in window)){[...R,...S].forEach(e=>e.classList.add("vis"));return}
 const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add("vis");io.unobserve(x.target)}}),{threshold:.12,rootMargin:"0px 0px -6% 0px"});[...R,...S].forEach(e=>io.observe(e))})();
+
+/* ===== CINEMATIC V2 ===== */
+const P=d=>`<path d="${d}" pathLength="1"/>`;
+const chain=a=>`<div class="chain">${a.map((t,i)=>(i?`<i class="cn" style="--i:${i}"></i>`:"")+`<span class="nd" style="--i:${i}">${t}</span>`).join("")}</div>`;
+const kin=t=>`<p class="kin">${t.split(" ").map((w,i)=>`<span style="--i:${i}">${w}</span>`).join("")}</p>`;
+const W="M0 135q50-20 100 0t100 0t100 0t100 0";
+const MOT=[["M190 20L210 20L214 120L186 120Z","M195 45h10M195 60h10M195 75h10",W],
+["M170 40q-18 10-12 40q8 14 24 4q10-28-12-44z","M230 40q-18 10-12 40q8 14 24 4q10-28-12-44z",W],
+["M200 25v95M150 120h100M120 55h160","M120 55L98 95H142Z","M280 55L258 95H302Z"],
+["M90 95h220l-30 28H120z","M200 25v70M200 25l55 50h-55M200 40l-40 35h40",W],
+["M70 125h110M85 105h80M100 85h50M115 65h20M125 65v-25","M220 125h110M235 105h80M250 85h50M265 65h20M275 65v-25","M180 125h40"],
+["M120 35h160v80H120z","M135 55h130M135 75h130M135 95h90","M290 30l30-10l-10 60z"],
+["M200 125v-50M200 75l-60-35M200 75l60-35M200 75v-50","M140 40l-20-15M140 40l20-15M260 40l-20-15M260 40l20-15","M200 25l-8 10"],
+["M200 75m-30 0a30 30 0 1 0 60 0a30 30 0 1 0-60 0","M200 20v20M200 110v20M145 75h20M235 75h20","M161 36l14 14M239 114l-14-14M239 36l-14 14M161 114l14-14"]];
+const CAP=["Yupa (tiang batu) dan aliran Sungai Mahakam","telapak kaki (Ciaruteun) dan aliran air","timbangan keadilan Ratu Shima","kapal dagang di lautan","dua candi untuk dua dinasti","naskah dan pena sastra","pohon silsilah raja","surya dan cahaya Nusantara"];
+const ILL=i=>`<figure class="ill"><svg class="dr on" viewBox="0 0 400 150" role="img" aria-label="${CAP[i]}" style="background:linear-gradient(135deg,${K[i].col}99,#071426)">${MOT[i].map(P).join("")}</svg><figcaption>Ilustrasi simbolik: ${CAP[i]}. Bukan foto atau rekonstruksi arkeologis.</figcaption></figure>`;
+const DIA=[
+`${chain(["Kudungga (pendiri/raja asli lokal)","Aswawarman (pembuka wangsa)","Mulawarman (raja terbesar)"])}<p>Mulawarman menyedekahkan <b class="cnt" data-n="20000" style="color:var(--or)">0</b> ekor sapi kepada para Brahmana di Waprakeswara (tercatat pada Prasasti Yupa).</p>`,
+`<svg viewBox="0 0 400 110" style="width:100%" role="img" aria-label="Diagram saluran air"><path class="flow" d="M10 30C100 10 200 50 390 28"/><path class="flow" d="M10 85C120 65 220 105 390 80"/><text x="10" y="12" fill="#F5F0E6" font-size="12">Kali Gomati: 6.122 tombak (± 11 km)</text><text x="10" y="67" fill="#F5F0E6" font-size="12">Kali Chandrabaga</text></svg><p>Prasasti Tugu mencatat pengerjaan dalam 21 hari untuk mencegah banjir dan mengairi sawah.</p>`,
+kin("Hukum ditegakkan tanpa pandang bulu, bahkan terhadap putra sendiri")+"<p>Sumber: Prasasti Tukmas, Prasasti Sojomerto, dan berita Tiongkok (Dinasti Tang).</p>",
+`<p>Pusat kerajaan:</p>${chain(["Palembang","Jambi"])}<p>Jalur pelayaran strategis:</p>${chain(["Selat Malaka","Selat Sunda","Laut Cina Selatan"])}`,
+`<div class="two"><div class="nd"><b>Dinasti Sanjaya</b><br><small>Hindu Syiwa · Prasasti Canggal 732 M</small></div><div class="lk">Rakai Pikatan ⟷ Pramodhawardhani<br><small>pernikahan politik</small></div><div class="nd"><b>Dinasti Syailendra</b><br><small>Buddha Mahayana · Raja Samaratungga</small></div></div>${chain(["Mataram Kuno, Jawa Tengah","929 M: Mpu Sindok pindah ke Jawa Timur (Dinasti Isyana)","Kahuripan (Airlangga) → Janggala &amp; Panjalu"])}`,
+`${chain(["Kakawin Bharatayuddha: Mpu Sedah &amp; Mpu Panuluh","Hariwangsa","Smaradahana: Mpu Dharmaja","Lubdaka: Mpu Tanakung"])}${chain(["Jayabaya (1135–1157 M)","Keruntuhan 1222 M"])}`,
+`${chain(["Ken Arok","Anusapati","Tohjaya","Ranggawuni (Wisnuwardhana)","Kertanegara (1268–1292 M)"])}<p>Urutan raja sesuai dokumen. 1292 M: serangan Jayakatwang dari Kediri.</p>`,
+`<p>Raja-raja utama (urutan sesuai dokumen):</p>${chain(["Raden Wijaya","Jayanegara","Tribhuwana Tunggadewi","Hayam Wuruk"])}${kin("Tidak menikmati kesenangan duniawi sebelum Nusantara bersatu")}${kin("Bhinneka Tunggal Ika Tan Hana Dharma Mangrwa")}`];
+kd=function(i){const k=K[i];open_(k.n,k.p+" — "+k.l,ILL(i)+`<div class="dia"><h4>Diagram penjelas</h4>${DIA[i]}</div>`+`<p><b>Corak keagamaan:</b> ${k.c}</p>`+k.S.map(s=>`<h4>${s[0]}</h4>`+(s[1].startsWith("<")?s[1]:`<p>${s[1]}</p>`)).join("")+`<h4>Peninggalan utama (tabel komparasi)</h4><p>${k.pen}</p>`);
+const c=$(".cnt");if(c){const n=+c.dataset.n,t0=performance.now();(function f(t){const r=Math.min(1,(t-t0)/1800);c.textContent=Math.round(n*r).toLocaleString("id-ID");if(r<1)requestAnimationFrame(f)})(t0)}};
+// Peta
+const PI=[["India (barat)","Sumber pengaruh Hindu-Buddha. Kitab suci Veda ditulis dalam bahasa Sanskerta dan aksara Pallawa; Universitas Nalanda disebut dalam Teori Arus Balik."],["Selat Malaka","Jalur pelayaran strategis yang membawa pedagang, pendeta, dan musafir. Sriwijaya kelak menguasai jalur ini."],["Laut Jawa","Bersama Selat Malaka, jalur ini membawa sistem kepercayaan, aksara, bahasa, tata pemerintahan, dan kesenian baru."],["Tiongkok (timur)","Mitra jalur dagang di timur. Berita Tiongkok (Dinasti Tang) mencatat Kalingga dan pendeta Buddha Jnanabhadra."]];
+$$("#map .pt").forEach(p=>{const f=()=>{$$("#map .pt").forEach(x=>x.classList.remove("a"));p.classList.add("a");const d=PI[p.dataset.p];$("#pi").innerHTML=`<b class="cz" style="color:var(--au)">${d[0]}</b><p>${d[1]}</p>`};p.onclick=f;p.onkeydown=e=>{if(e.key=="Enter"||e.key==" "){e.preventDefault();f()}}});
+// Teori: ikon + arah berbeda + perbandingan
+const DIR=[["-80px","0px"],["0px","-60px"],["80px","0px"],["0px","70px"],["-60px","60px"]],
+ICO=["M8 8h28v28H8zM14 16h16M14 22h16M14 28h10","M10 38L34 14M30 10h8v8M8 34l6 6","M6 28h36l-6 10H12zM24 8v20M24 8l12 14H24","M24 42V12M24 18l-8-6M24 18l8-6M24 26l-8-6M24 26l8-6M24 34l-8-6M24 34l8-6","M36 14a14 14 0 1 0 4 12M36 6v10H26"],
+BR=["Kaum Brahmana (pendeta)","Kaum Ksatria (prajurit/bangsawan)","Pedagang India (kasta Waisya)","Kasta Sudra (pekerja/budak)","Pemuda dan tokoh lokal Nusantara"];
+$$("#tg .card").forEach((c,i)=>{c.style.setProperty("--x",DIR[i][0]);c.style.setProperty("--y",DIR[i][1]);c.firstElementChild.innerHTML=`<svg class="dr ic" viewBox="0 0 48 48" aria-hidden="true">${P(ICO[i])}</svg>`;c.insertAdjacentHTML("beforeend",'<small class="hint">Ikon simbolik</small>')});
+const ca=$("#ca"),cc=$("#cc");ca.innerHTML=cc.innerHTML=TEORI.map((t,i)=>`<option value="${i}">${t[0]}</option>`).join("");cc.value=4;
+function cmpT(){$("#cr").innerHTML=[ca.value,cc.value].map(i=>`<div class="card"><h3>${TEORI[i][0]}</h3><small>${TEORI[i][1]}</small><p><b>Pembawa:</b> ${BR[i]}</p><p>${TEORI[i][2]}</p></div>`).join("")}ca.onchange=cc.onchange=cmpT;cmpT();
+// Slider candi
+const sl_=$("#sl2");function slv(){const v=sl_.value;$("#cb2").style.clipPath=`inset(0 0 0 ${v}%)`;$("#dv").style.left=v+"%"}sl_.oninput=slv;slv();
+// Kata kunci penutup
+const kw=document.createElement("div");kw.className="kw fx";kw.innerHTML=["AKULTURASI","PERADABAN","PERSATUAN","WARISAN"].map((w,i)=>`<span style="--i:${i}">${w}</span>`).join("");$("#kesimpulan").appendChild(kw);
+$("#stage").classList.add("fx","wipe");
+// Hero: kabut dan debu emas
+const H=$("#hero");H.insertAdjacentHTML("afterbegin",'<div class="mist" aria-hidden="true"></div>');for(let i=0;i<26;i++){const d=document.createElement("i");d.className="dust";d.style.cssText=`left:${Math.random()*100}%;animation-duration:${8+Math.random()*10}s;animation-delay:${-Math.random()*14}s`;H.appendChild(d)}
+// Observer + warna latar per bagian
+const io2=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add("vis");io2.unobserve(x.target)}}),{threshold:.25});$$(".fx").forEach(e=>io2.observe(e));
+const TN={latar:"rgba(21,94,145,.4)",peta:"rgba(21,94,145,.35)",teori:"rgba(242,193,78,.2)",timeline:"rgba(232,120,50,.28)",kerajaan:"rgba(21,94,145,.35)",peninggalan:"rgba(242,193,78,.22)",banding:"rgba(232,120,50,.18)",kesimpulan:"rgba(232,120,50,.3)",kuis:"rgba(21,94,145,.35)"};
+const io3=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting&&TN[x.target.id])document.body.style.setProperty("--tint",TN[x.target.id])}),{rootMargin:"-45% 0px -45% 0px"});$$("section").forEach(s=>io3.observe(s));
+
+/* ===== CONTOH DESAIN GRAFIS ===== */
+const MV=i=>`<svg class="dr" viewBox="0 0 400 150" aria-hidden="true">${MOT[i].map(P).join("")}</svg>`;
+// Poster infografis di dalam detail kerajaan
+const kd0=kd;kd=function(i){kd0(i);const k=K[i];$("#mbd").insertAdjacentHTML("afterbegin",`<div class="poster" style="--pc:${k.col}"><small>POSTER INFOGRAFIS · CONTOH DESAIN GRAFIS</small><h3>${k.n}</h3><div class="pr">${k.p}</div><div class="chips"><i><b>Lokasi</b> ${k.l.split(/[,(]/)[0]}</i><i><b>Corak</b> ${k.c.split("(")[0]}</i><i><b>Peninggalan</b> ${k.pen}</i></div>${MV(i).replace('class="dr"','class="dr on"')}</div>`)};
+// Thumbnail grafis di kartu kerajaan dan timeline
+$$("#kg .card,#tl .card").forEach(c=>{const i=+(c.dataset.k??c.querySelector("[data-k]").dataset.k);c.insertAdjacentHTML("afterbegin",`<svg class="dr thumb" viewBox="0 0 400 150" role="img" aria-label="Grafis simbolik ${K[i].n}" style="background:linear-gradient(135deg,${K[i].col}aa,#071426)">${MOT[i].map(P).join("")}</svg>`)});
+// Banner desain grafis untuk setiap materi
+const IC5=ICO.map((d,i)=>`<g transform="translate(${70+i*58},50) scale(1.1)">${P(d)}</g>`).join("");
+const BN={latar:["Pertemuan Dua Dunia","Jalur maritim India, Nusantara, dan Tiongkok","#155E91",MOT[3].map(P).join("")],
+peta:["Rute Pertukaran Budaya","Pedagang, pendeta, dan musafir","#155E91",P("M40 110C120 40 200 140 280 70S340 60 370 40")+P("M40 110h1M280 70h1M370 40h1")],
+teori:["Lima Teori, Satu Perjalanan","Brahmana, Ksatria, Waisya, Sudra, Arus Balik","#F2C14E",IC5],
+timeline:["Lintasan Abad IV–XVI M","Delapan kerajaan, periode saling tumpang tindih","#E87832",P("M20 75H380")+P("M60 55v40M120 55v40M180 55v40M240 55v40M300 55v40M360 55v40")],
+kerajaan:["Delapan Kerajaan Nusantara","Dari Kutai hingga Majapahit","#155E91",MOT[4].map(P).join("")],
+peninggalan:["Arsitektur dalam Gerak","Candi, prasasti, sastra, dan bahasa","#F2C14E",P("M120 125h160M135 105h130M150 85h100M165 65h70M185 65v-30M200 20v15")],
+banding:["Membandingkan Jejak","Periode, lokasi, corak, dan peninggalan","#E87832",MOT[2].map(P).join("")],
+kesimpulan:["Warisan Melintasi Waktu","Akulturasi, persatuan, Bhinneka Tunggal Ika","#E87832",MOT[7].map(P).join("")],
+kuis:["Uji Pemahaman","Sepuluh soal dari materi","#155E91",P("M200 75m-50 0a50 50 0 1 0 100 0a50 50 0 1 0-100 0")+P("M175 78l18 18l34-40")]};
+Object.entries(BN).forEach(([id,[t,s,c,m]])=>{const h=$("#"+id+" h2");if(h){h.insertAdjacentHTML("afterend",`<figure class="ban fx wipe" style="--pc:${c}"><small>CONTOH DESAIN GRAFIS</small><b>${t}</b><span>${s}</span><svg class="dr" viewBox="0 0 400 150" aria-hidden="true">${m}</svg></figure>`);io2.observe(h.nextElementSibling)}});
+
+/* ===== BABAK SEJARAH: ADEGAN SINEMATIK ===== */
+const R=(x,y,w,h,f,o="")=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${f}" ${o}/>`,
+PA=(d,f,o="")=>`<path d="${d}" fill="${f}" ${o}/>`,CI=(x,y,r,f,o="")=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${f}" ${o}/>`,
+tree=(x,y,s,f)=>CI(x,y-s*1.3,s*.9,f)+R(x-s*.1,y-s*1.3,s*.2,s*1.3,f),
+palm=(x,y,h,f)=>PA(`M${x} ${y}q${h*.1} ${-h*.5} ${h*.25} ${-h}`,"none",`stroke="${f}" stroke-width="7"`)+PA(`M${x+h*.25} ${y-h}q-30-30-65-5M${x+h*.25} ${y-h}q30-30 65-5M${x+h*.25} ${y-h}q-20-40-50-35M${x+h*.25} ${y-h}q20-40 50-35`,"none",`stroke="${f}" stroke-width="5"`),
+stars=n=>Array.from({length:n},(_,i)=>CI((i*137)%1000,(i*53)%280,1.6,"#fff",`class="st" style="animation-delay:${i%5*.5}s"`)).join(""),
+waves=(y,f)=>[0,1,2].map(k=>PA(`M-160 ${y+k*16}q40-12 80 0`+" t80 0".repeat(16),"none",`class="wv" stroke="${f}" stroke-width="5" style="animation-delay:${-k*2}s"`)).join(""),
+cow=(x,y)=>`<g fill="#1a1a1a"><ellipse cx="${x}" cy="${y}" rx="26" ry="13"/>${R(x-18,y+8,5,16,"#1a1a1a")}${R(x+12,y+8,5,16,"#1a1a1a")}${CI(x+30,y-6,8,"#1a1a1a")}</g>`,
+ship=(x,y,s)=>`<g transform="translate(${x} ${y}) scale(${s})"><path d="M-90 0H90L65 35H-65Z" fill="#2a1a10"/><path d="M0 0V-130" stroke="#2a1a10" stroke-width="6"/><path d="M0-125L80-20H0Z" fill="#F5F0E6"/><path d="M-6-110L-70-20H-6Z" fill="#e8d9b8"/></g>`;
+const SD=[
+{c1:"#2a6f5c",c2:"#f0a35e",sun:[700,330,70,"#F2C14E"],far:PA("M0 400Q120 330 260 390T520 370T760 380T1000 350V480H0Z","#14463a"),mid:[60,150,260,380,620,760,880].map((x,j)=>tree(x,450,40+j%3*10,"#0d3329")).join("")+PA("M0 470Q250 440 500 470T1000 460V560H0Z","#2f7fa8"),gr:"#1c5a78",obj:PA("M470 250L530 250L540 500L460 500Z","#8b8478")+PA("M470 250L500 225L530 250Z","#a39d90")+[290,320,350].map(y=>R(485,y,30,4,"#5f594f")).join("")+cow(250,495)+cow(320,508)+cow(740,498)},
+{c1:"#143d56",c2:"#7fb7a4",sun:[300,300,60,"#F5F0E6"],far:PA("M0 410Q200 340 420 400T800 380T1000 400V480H0Z","#1d5a4c"),mid:PA("M0 430Q250 410 500 430T1000 420V480H0Z","#3f8f5a")+PA("M0 452Q250 436 500 452T1000 446V480H0Z","#2f7a4a"),gr:"#2f7a4a",obj:`<path class="flow" d="M0 520Q300 490 520 510T1000 490"/><path class="flow" d="M0 548Q300 520 520 538T1000 520"/>`+PA("M410 500Q400 400 470 360Q540 330 600 380Q640 440 620 500Z","#6f6a62")+PA("M485 440q-14 8-9 30q6 10 18 3q8-22-9-33z","#d9d2c0","opacity=.8")+PA("M548 428q-14 8-9 30q6 10 18 3q8-22-9-33z","#d9d2c0","opacity=.8")},
+{c1:"#3b2a63",c2:"#e87832",sun:[500,360,80,"#F2C14E"],far:R(0,380,1000,100,"#1a4d78"),mid:palm(120,480,150,"#0b2a3f")+palm(880,480,170,"#0b2a3f")+palm(230,480,110,"#0b2a3f"),gr:"#0e3452",obj:R(340,470,320,14,"#4a2f1c")+[0,1,2,3].map(k=>R(360+k*80,400,12,72,"#4a2f1c")).join("")+PA("M310 400L500 330L690 400Z","#7a3b1d")+PA("M360 345L500 290L640 345Z","#8a4724")+PA("M500 290V120M430 140H570","none",'stroke="#F2C14E" stroke-width="5"')+PA("M430 140L405 200H455Z","#F2C14E")+PA("M570 140L545 200H595Z","#F2C14E")},
+{c1:"#1d3f6e",c2:"#f2a65a",sun:[700,360,90,"#F2C14E"],far:PA("M120 395Q220 340 320 395Z","#0d2a44")+PA("M780 395Q860 360 940 395Z","#0d2a44"),mid:ship(250,445,.5)+ship(790,435,.45),gr:"#103a62",obj:`<g class="bob">${ship(500,500,1.25)}</g>`+waves(505,"#2a78b8")},
+{c1:"#2b1f4d",c2:"#e87832",sun:[250,330,70,"#F2C14E"],far:PA("M620 440L760 190L900 440Z","#1c1738")+PA("M740 200Q700 150 740 110","none",'stroke="#8a7aa8" stroke-width="8" opacity=".4"'),mid:[660,740,820].map((x,j)=>PA(`M${x-34} 480V${j==1?300:340}L${x} ${j==1?230:280}L${x+34} ${j==1?300:340}V480Z`,"#241a3d")).join(""),gr:"#191230",obj:[0,1,2,3,4].map(k=>R(220+k*28,500-(k+1)*30,360-k*56,30,k%2?"#7e7366":"#6d6358")).join("")+[300,340,460,500].map(x=>PA(`M${x-14} 380a14 16 0 0 1 28 0Z`,"#7b6a5a")).join("")+PA("M372 350a28 34 0 0 1 56 0Z","#8a7a68")+R(398,300,4,22,"#8a7a68")},
+{night:1,c1:"#07101f",c2:"#1b3a6b",sun:[800,150,50,"#F5F0E6"],far:PA("M0 420Q250 370 500 410T1000 400V480H0Z","#0a1a30"),mid:palm(140,480,160,"#050d1a")+palm(860,480,140,"#050d1a")+PA("M200 420L330 370L460 420Z","#050d1a"),gr:"#08162b",obj:R(330,470,340,14,"#3b2a1c")+R(350,484,10,30,"#3b2a1c")+R(640,484,10,30,"#3b2a1c")+PA("M370 440Q500 410 630 440V468Q500 440 370 468Z","#e8d9a8")+[0,1].map(k=>PA(`M400 ${446+k*8}Q500 ${422+k*8} 600 ${446+k*8}`,"none",'stroke="#8a7a50" stroke-width="2"')).join("")+R(690,440,16,30,"#b98a3d")+CI(698,425,42,"rgba(242,193,78,.25)")+PA("M698 440q-10-22 0-34q10 12 0 34z","#F2C14E",'class="fl"')},
+{c1:"#1a2d5a",c2:"#b8654a",sun:[180,300,60,"#F5F0E6"],far:PA("M0 420Q250 360 500 410T1000 390V480H0Z","#16204a"),mid:[80,200,800,920].map((x,j)=>tree(x,470,50+j%2*14,"#0e1633")).join(""),gr:"#0c1430",obj:R(340,470,320,30,"#5b5148")+R(360,440,280,30,"#675d52")+R(390,330,220,110,"#726657")+R(480,380,40,60,"#2a2320")+R(400,300,200,30,"#675d52")+R(420,272,160,28,"#5b5148")+R(445,246,110,26,"#675d52")+PA("M475 246L500 205L525 246Z","#5b5148")},
+{c1:"#3a1a2e",c2:"#e87832",sun:[500,340,115,"#F2C14E"],far:PA("M0 430L160 330L300 420L460 320L620 420L800 340L1000 430V480H0Z","#2a1530"),mid:[120,880].map(x=>R(x-15,390,30,90,"#7a2e22")+PA(`M${x-22} 390L${x} 340L${x+22} 390Z`,"#7a2e22")).join(""),gr:"#2a1018",obj:PA("M250 500V300H330V260H380V230H430V500Z","#8b3a2a")+PA("M750 500V300H670V260H620V230H570V500Z","#8b3a2a")+[330,380,430].map(y=>R(250,y,180,5,"#5c2318")+R(570,y,180,5,"#5c2318")).join("")+PA("M440 500L560 500L600 560L400 560Z","#c9a25a")}];
+const CP=["inset(0 100% 0 0)","inset(100% 0 0 0)","inset(0 0 0 100%)","inset(0 0 100% 0)"],
+CP2=["Jejak Yupa di tepi Sungai Mahakam","Air, kuasa, dan peradaban","Keadilan yang tak memandang bulu","Kekuatan maritim dan pusat belajar Buddha","Dua dinasti, satu warisan","Masa keemasan sastra Jawa Kuno","Kebangkitan dan keruntuhan sebuah kerajaan","Warisan besar Nusantara"],
+FC=[["PRASASTI YUPA","7 buah, aksara Pallawa dan bahasa Sanskerta"],["PRASASTI TUGU","Saluran Kali Gomati ± 11 km dalam 21 hari"],["RATU SHIMA","Hukum tegas tanpa pandang bulu (674 M)"],["KEDUKAN BUKIT","682 M: perjalanan suci dengan 20.000 pasukan"],["DUA DINASTI","Sanjaya dan Syailendra hidup berdampingan"],["BHARATAYUDDHA","Karya Mpu Sedah dan Mpu Panuluh"],["KERTANEGARA","Ekspedisi Pamalayu pada 1275 M"],["SUMPAH PALAPA","Gajah Mada, 1336 M, menyatukan Nusantara"]];
+const SCN=i=>{const d=SD[i];return `<svg viewBox="0 0 1000 560" preserveAspectRatio="xMidYMid slice" role="img" aria-label="${CP2[i]}" style="--cp:${CP[i%4]}"><defs><linearGradient id="sk${i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${d.c1}"/><stop offset="1" stop-color="${d.c2}"/></linearGradient></defs>${R(0,0,1000,560,`url(#sk${i})`)}${d.night?stars(46):""}<g data-s="-30">${CI(d.sun[0],d.sun[1],d.sun[2],d.sun[3],'opacity=".92"')}</g><g data-s="12">${d.far}</g><g data-s="26">${d.mid}</g>${R(0,470,1000,120,d.gr)}<g data-s="44">${d.obj}</g></svg>`};
+const bs=document.createElement("section");bs.id="babak";bs.className="fx";bs.innerHTML='<span class="lbl">ADEGAN SEJARAH</span><h2>Babak Sejarah</h2><p class="nar">Gulir ke bawah untuk memasuki adegan setiap kerajaan. Ilustrasi ini adalah gambaran simbolik buatan sendiri, bukan foto atau rekonstruksi arkeologis.</p>';
+const SW=document.createElement("div");SW.id="scenes";
+SW.innerHTML=K.map((k,i)=>`<article class="scn fx" style="--c:${k.col}">${SCN(i)}<div class="top"><span>${String(i+1).padStart(2,"0")} / 08 · ${k.p.toUpperCase()}</span><span>ILUSTRASI SIMBOLIK</span></div><h3 class="tt" aria-label="${k.n}">${[...k.n.toUpperCase()].map((ch,j)=>`<span aria-hidden="true" style="--i:${j}">${ch==" "?"&nbsp;":ch}</span>`).join("")}</h3><div class="cap">${CP2[i]}</div><div class="fct"><b>${FC[i][0]}</b>${FC[i][1]}</div><button class="btn p" data-k="${i}">BUKA MATERI LENGKAP</button></article>`).join("");
+$("#kerajaan").before(bs,SW);[bs,...$$(".scn")].forEach(e=>io2.observe(e));io3.observe(bs);TN.babak="rgba(232,120,50,.25)";
+const RM=matchMedia("(prefers-reduced-motion:reduce)").matches;let tk=false;
+function par(){tk=false;$$(".scn").forEach(s=>{const r=s.getBoundingClientRect();if(r.bottom<0||r.top>innerHeight)return;const p=(r.top+r.height/2-innerHeight/2)/innerHeight;s.querySelectorAll("[data-s]").forEach(g=>g.style.transform=`translate3d(0,${(p*g.dataset.s).toFixed(1)}px,0)`)})}
+if(!RM){addEventListener("scroll",()=>{if(!tk){tk=true;requestAnimationFrame(par)}},{passive:true});par()}
+
+/* Perbaikan: elemen yang terpotong clip-path tidak terdeteksi observer biasa */
+const io4=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add("vis");io4.unobserve(x.target)}}),{threshold:0,rootMargin:"0px 0px -8% 0px"});
+$$(".wipe").forEach(e=>{io2.unobserve(e);io4.observe(e)});
